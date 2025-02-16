@@ -44,4 +44,26 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+router.post("/logout", async (req: Request, res: Response): Promise<void> => {
+  try {
+    if (!req.headers.cookie) {
+      res.status(401).json({ error: "No authentication cookie found" });
+      return;
+    }
+
+
+    await axios.post(`${FETCH_API_URL}/auth/logout`, {}, {
+      headers: {
+        Cookie: req.headers.cookie,
+      },
+      withCredentials: true,
+    });
+
+    res.setHeader("Set-Cookie", "fetch-access-token=; Path=/; Expires=Fri, 01 Jan 1958 00:00:00 GMT; HttpOnly");
+
+    res.json({ success: true, message: "Log out successful" });
+  } catch (error: any) {
+    res.status(error.response?.status || 500).json({ error: "Internal Server Error" });
+  }
+});
 export default router;

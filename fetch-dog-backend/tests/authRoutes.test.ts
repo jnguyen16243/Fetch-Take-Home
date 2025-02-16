@@ -88,3 +88,50 @@ describe("POST /api/auth/login", () => {
     expect(response.body).toEqual({ error: "Internal server error. Please try again later." });
   });
 });
+
+
+describe("POST /api/auth/logout", () => {
+    let mockAxios: MockAdapter;
+  
+    beforeEach(() => {
+      mockAxios = new MockAdapter(axios);
+    });
+  
+    afterEach(() => {
+      mockAxios.reset();
+    });
+  
+    test("✅ Should return 200 and clear the authentication cookie on successful logout", async () => {
+      mockAxios.onPost(`${FETCH_API_URL}/auth/logout`).reply(200);
+  
+      const response = await request(app)
+        .post("/api/auth/logout")
+        .set("Cookie", "fetch-access-token=valid_token_here");
+  
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({ success: true, message: "Log out successful" });
+  
+      expect(response.headers["set-cookie"]).toContain(
+        "fetch-access-token=; Path=/; Expires=Fri, 01 Jan 1958 00:00:00 GMT; HttpOnly"
+      );
+    });
+  
+    test("❌ Should return 401 if no authentication cookie is provided", async () => {
+      const response = await request(app).post("/api/auth/logout");
+  
+      expect(response.status).toBe(401);
+      expect(response.body).toEqual({ error: "No authentication cookie found" });
+    });
+  
+    test("❌ Should return 500 if the external logout API fails", async () => {
+      mockAxios.onPost(`${FETCH_API_URL}/auth/logout`).reply(500, { error: "Internal Server Error" });
+  
+      const response = await request(app)
+        .post("/api/auth/logout")
+        .set("Cookie", "fetch-access-token=valid_token_here");
+  
+      expect(response.status).toBe(500);
+      expect(response.body).toEqual({ error: "Internal Server Error" });
+    });
+});
+
