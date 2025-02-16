@@ -27,7 +27,7 @@ describe("POST /api/auth/login", () => {
     const mockToken = "fetch-access-token=mocked-token; Path=/; HttpOnly";
 
 
-    mockAxios.onPost(`${FETCH_API_URL}/auth/login`).reply(200, {}, { "set-cookie": mockToken });
+    mockAxios.onPost(`${FETCH_API_URL}/auth/login`).reply(200, {}, { "set-cookie": [mockToken] as unknown as string });
 
     const response = await request(app).post("/api/auth/login").send({ name: mockName, email: mockEmail });
 
@@ -52,8 +52,9 @@ describe("POST /api/auth/login", () => {
   test("❌ Should return 401 if the authentication token is missing", async () => {
     const mockName = "John Doe";
     const mockEmail = "john@example.com";
+    const mockToken = "not-access-token=mocked-token; Path=/; HttpOnly";
 
-    mockAxios.onPost(`${FETCH_API_URL}/auth/login`).reply(200, {}, { "set-cookie": "some-other-cookie=value" });
+    mockAxios.onPost(`${FETCH_API_URL}/auth/login`).reply(200, {}, { "set-cookie": [mockToken] as unknown as string });
 
     const response = await request(app).post("/api/auth/login").send({ name: mockName, email: mockEmail });
 
@@ -71,6 +72,19 @@ describe("POST /api/auth/login", () => {
     const response = await request(app).post("/api/auth/login").send({ name: mockName, email: mockEmail });
 
     expect(response.status).toBe(401);
-    expect(response.body).toEqual({ error: "Login failed" });
+    expect(response.body).toEqual({ error: "Invalid credentials" });
+  });
+
+  test("❌ Should return Unexpected error occur. Please try again later", async () => {
+    const mockName = "John Doe";
+    const mockEmail = "john@example.com";
+
+
+    mockAxios.onPost(`${FETCH_API_URL}/auth/login`).reply(500, { error: "Server failure" });
+
+    const response = await request(app).post("/api/auth/login").send({ name: mockName, email: mockEmail });
+
+    expect(response.status).toBe(500);
+    expect(response.body).toEqual({ error: "Internal server error. Please try again later." });
   });
 });

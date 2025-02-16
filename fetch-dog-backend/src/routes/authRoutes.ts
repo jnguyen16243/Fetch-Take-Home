@@ -27,9 +27,20 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
 
     res.setHeader("Set-Cookie", cookieString);
     res.json({ success: true });
+
   } catch (error: any) {
     console.error("Login Error:", error.response?.data || error.message);
-    res.status(401).json({ error: "Login failed" });
+    if (error.response) {
+      if (error.response.status === 401) {
+        res.status(401).json({ error: "Invalid credentials" });
+      } else if (error.response.status === 500) {
+        res.status(500).json({ error: "Internal server error. Please try again later." });
+      } else {
+        res.status(error.response.status).json({ error: error.response.data || "An error occurred" });
+      }
+    } else {
+      res.status(500).json({ error: "Unexpected error occurred. Please try again later." });
+    }
   }
 });
 
