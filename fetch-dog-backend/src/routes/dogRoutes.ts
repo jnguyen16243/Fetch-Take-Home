@@ -1,38 +1,17 @@
 import { Router, Request, Response, RequestHandler } from "express";
 import axios, { AxiosError } from "axios";
+import authMiddleware from "../middleware/authMiddleware";
 
 const router = Router();
 const FETCH_API_URL = "https://frontend-take-home-service.fetch.com";
 
 
-const extractAuthToken = (req: Request): string | null => {
-  if (!req.headers.cookie) return null;
-
-  const cookieString = decodeURIComponent(req.headers.cookie);
-  const cookiesArray = cookieString.split("; ").map(c => c.trim());
-
-
-  const fetchAccessTokens = cookiesArray
-    .filter(c => c.startsWith("fetch-access-token="))
-    .map(c => c.split("=")[1]);
-
-  return fetchAccessTokens.pop() || null;
-};
-
-
-const breedsHandler: RequestHandler = async (req, res): Promise<void> => {
+const breedsHandler: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
-    const accessToken = extractAuthToken(req);
-
-    if (!accessToken) {
-      res.status(401).json({ error: "Missing fetch-access-token in request headers" });
-      return;
-    }
-
     const response = await axios.get(`${FETCH_API_URL}/dogs/breeds`, {
       headers: {
-        Cookie: req.headers.cookie, // ✅ Forward all cookies
-        Authorization: `Bearer ${accessToken}`,
+        Cookie: req.headers.cookie, 
+        Authorization: `Bearer ${req.authToken}`,
         "Content-Type": "application/json"
       },
       withCredentials: true
@@ -50,20 +29,13 @@ const breedsHandler: RequestHandler = async (req, res): Promise<void> => {
 };
 
 
-const searchDogsHandler: RequestHandler = async (req, res): Promise<void> => {
+const searchDogsHandler: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
-    const accessToken = extractAuthToken(req);
-
-    if (!accessToken) {
-      res.status(401).json({ error: "Missing fetch-access-token in request headers" });
-      return;
-    }
-
     const response = await axios.get(`${FETCH_API_URL}/dogs/search`, {
       params: req.query,
       headers: {
         Cookie: req.headers.cookie,
-        Authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${req.authToken}`,
         "Content-Type": "application/json"
       },
       withCredentials: true
@@ -81,7 +53,7 @@ const searchDogsHandler: RequestHandler = async (req, res): Promise<void> => {
 };
 
 
-router.get("/breeds", breedsHandler);
-router.get("/search", searchDogsHandler);
+router.get("/breeds",authMiddleware, breedsHandler);
+router.get("/search",authMiddleware, searchDogsHandler);
 
 export default router;
