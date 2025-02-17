@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 
 import authRoutes from "./routes/authRoutes";
 import dogRoutes from "./routes/dogRoutes";
+import locationRoutes from "./routes/locationRoutes"
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(cors({
 
 app.use("/api/auth", authRoutes);
 app.use("/api/dogs", dogRoutes);
+app.use("/api/locations",locationRoutes)
 
 app.use((req, res, next) => {
   console.log(`📢 Received request: ${req.method} ${req.url}`);
