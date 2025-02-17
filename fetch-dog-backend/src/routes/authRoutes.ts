@@ -9,8 +9,6 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
     const { name, email } = req.body;
     const response = await axios.post(`${FETCH_API_URL}/auth/login`, { name, email }, { withCredentials: true });
 
-    console.log("Set-Cookie Header:", response.headers["set-cookie"]);
-
     if (!response.headers["set-cookie"]) {
       res.status(401).json({ error: "Login failed: No authentication cookie received" });
       return;
@@ -29,7 +27,6 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
     res.json({ success: true });
 
   } catch (error: any) {
-    console.error("Login Error:", error.response?.data || error.message);
     if (error.response) {
       if (error.response.status === 401) {
         res.status(401).json({ error: "Invalid credentials" });
