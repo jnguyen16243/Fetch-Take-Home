@@ -10,7 +10,6 @@ export const isValidCoordinates = (coord: any): boolean =>
 
 export const sanitizeCity = (city: any): string => (typeof city === "string" ? city : "");
 
-
 export const sanitizeStates = (states: any): string[] =>
   Array.isArray(states) && states.every(state => typeof state === "string" && state.length === 2)
     ? states
