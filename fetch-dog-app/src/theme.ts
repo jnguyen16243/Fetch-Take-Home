@@ -4,7 +4,7 @@ const theme = createTheme({
   palette: {
     primary: {
       main: "#300d38", // Fetch Purple
-      light: "#f5b254",
+      light: "#5a1a69",
       dark: "#f6b156",
       contrastText: "#ffffff",
     },
@@ -20,7 +20,7 @@ const theme = createTheme({
     },
     text: {
       primary: "#090325",
-      secondary: "#f5b254",
+      secondary: "#5a1a69",
     },
   },
   typography: {

@@ -9,7 +9,7 @@ import Search from "./pages/Search.tsx";
 const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
-    <CssBaseline /> {/* Ensures consistent background & typography */}
+    <CssBaseline /> 
     <AuthProvider>
       <Router>
         <Routes>
