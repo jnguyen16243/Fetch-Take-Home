@@ -5,8 +5,8 @@ import { fetchBreeds } from "../api/dogApi.ts";
 import { Dog } from "../types.ts";
 import { Container, Typography, CircularProgress, List, ListItem, AppBar, Toolbar, IconButton, Button, TableContainer, Paper, Table, TableBody, TableCell, TableHead, TableRow, TextField, Box, useTheme, Slider, FormControl, FormLabel, FormControlLabel, Radio, RadioGroup, Stack, Select, MenuItem, InputLabel, Card, CardMedia, CardContent } from "@mui/material";
 import Grid from '@mui/material/Grid2';
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import DogCard from "../components/DogCard.tsx";
+import AppBarComponent from "../components/AppBarComponent.tsx";
 const Search: React.FC = () => {
   const [dogs, setDogs] = useState<Dog[]>([]);
   const [breeds, setBreeds] = useState<string[]>([]);
@@ -26,18 +26,7 @@ const Search: React.FC = () => {
 
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "secondary.main" }}>
-      {/* Navbar */}
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Fetch
-          </Typography>
-          <Button color="inherit" startIcon={<FavoriteIcon />}>
-            Favorites
-          </Button>
-          <Button color="inherit">Logout</Button>
-        </Toolbar>
-      </AppBar>
+      <AppBarComponent></AppBarComponent>
 
       <Container sx={{ mt: 4 }}>
         <Grid container spacing={3} alignItems="flex-start">
@@ -73,8 +62,6 @@ const Search: React.FC = () => {
           </Grid>
           <Grid size={{xs:12, md:9}} id="dog-list">
             <Grid container spacing={3}>
-              <DogCard></DogCard>
-              <DogCard></DogCard>
               <DogCard></DogCard>
               <DogCard></DogCard>
               <DogCard></DogCard>
