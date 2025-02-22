@@ -11,7 +11,7 @@ app.use("/api/dogs", authMiddleware, dogRoutes);
 
 const FETCH_API_URL = "https://frontend-take-home-service.fetch.com";
 
-describe("🐶 Dog Routes", () => {
+describe("Dog Routes", () => {
     let mockAxios: MockAdapter;
 
     beforeEach(() => {

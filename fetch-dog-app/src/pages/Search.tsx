@@ -3,32 +3,29 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.tsx";
 import { fetchBreeds } from "../api/dogApi.ts";
 import { Dog } from "../types.ts";
-import { Container, Typography, CircularProgress, List, ListItem, AppBar, Toolbar,IconButton, Button, TableContainer, Paper, Table, TableBody, TableCell, TableHead, TableRow, TextField, Box, useTheme, Grid, Slider, FormControl, FormLabel, FormControlLabel, Radio, RadioGroup } from "@mui/material";
+import { Container, Typography, CircularProgress, List, ListItem, AppBar, Toolbar, IconButton, Button, TableContainer, Paper, Table, TableBody, TableCell, TableHead, TableRow, TextField, Box, useTheme, Slider, FormControl, FormLabel, FormControlLabel, Radio, RadioGroup, Stack, Select, MenuItem, InputLabel, Card, CardMedia, CardContent } from "@mui/material";
+import Grid from '@mui/material/Grid2';
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import DogCard from "../components/DogCard.tsx";
 const Search: React.FC = () => {
   const [dogs, setDogs] = useState<Dog[]>([]);
   const [breeds, setBreeds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const theme = useTheme(); 
+  const theme = useTheme();
   useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/");
-      return;
-    }
+    if (isAuthenticated === null) return; //
+
+  if (isAuthenticated === false) {
+    navigate("/");
+  } else {
     setLoading(false);
-    // fetchBreeds()
-    //   .then((data) => {
-    //     console.table(data)
-    //     setBreeds(data);
-    //     setLoading(false);
-    //   })
-    //   .catch((error) => console.error("Error fetching dogs", error));
+  }
   }, [isAuthenticated, navigate]);
 
   return (
-<Box sx={{ minHeight: "100vh", backgroundColor: "secondary.main" }}>
+    <Box sx={{ minHeight: "100vh", backgroundColor: "secondary.main" }}>
       {/* Navbar */}
       <AppBar position="static">
         <Toolbar>
@@ -42,48 +39,59 @@ const Search: React.FC = () => {
         </Toolbar>
       </AppBar>
 
-      <Container disableGutters sx={{ mt: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          Welcome to My App
-        </Typography>
-        <Box 
-          sx={{ 
-            display: "flex", 
-            justifyContent: "flex-start", 
-            alignItems: "center", 
-            width: "100%", 
-          }}
-        >
-          <Box
-            sx={{
-              maxWidth: 400, 
-              width: "100%", 
-              p: 3,
-              borderRadius: 2,
-              boxShadow: 3,
-              backgroundColor: "white",
-            }}
-          >
-            <Typography variant="h6" gutterBottom>
-              Search
-            </Typography>
+      <Container sx={{ mt: 4 }}>
+        <Grid container spacing={3} alignItems="flex-start">
+          <Grid size={{ xs: 12, md: 3 }} id="search-section">
+            <Paper style={{ padding: "16px" }}>
+              <Typography variant="h6">Search</Typography>
+              {/* Stack for vertical arrangement */}
+              <Stack spacing={2} mt={2}>
+                <TextField fullWidth label="Address" variant="outlined" />
 
-            <TextField fullWidth label="Enter Address" variant="outlined" margin="normal" />
-            <FormControl component="fieldset" sx={{ mt: 2 }}>
-              <FormLabel sx={{ color: "primary.main" }}>Age Category</FormLabel>
-              <RadioGroup row>
-                <FormControlLabel value="puppy" control={<Radio color="primary" />} label="Puppy" />
-                <FormControlLabel value="young" control={<Radio color="primary" />} label="Young" />
-                <FormControlLabel value="adult" control={<Radio color="primary" />} label="Adult" />
-                <FormControlLabel value="senior" control={<Radio color="primary" />} label="Senior" />
-              </RadioGroup>
-            </FormControl>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Age</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    //value={age}
+                    label="Age"
+                  //onChange={handleChange} update variables!
+                  >
+                    <MenuItem value={10}>Puppy</MenuItem>
+                    <MenuItem value={20}>Young</MenuItem>
+                    <MenuItem value={30}>Adult</MenuItem>
+                    <MenuItem value={30}>Senior</MenuItem>
+                  </Select>
+                </FormControl>
 
-            <Button variant="contained" color="primary" fullWidth sx={{ mt: 2 }}>
-              Search
-            </Button>
-          </Box>
-        </Box>
+                <TextField fullWidth label="Breed" variant="outlined" />
+                <Button variant="contained" color="primary" fullWidth>
+                  Search
+                </Button>
+              </Stack>
+            </Paper>
+          </Grid>
+          <Grid size={{xs:12, md:9}} id="dog-list">
+            <Grid container spacing={3}>
+              <DogCard></DogCard>
+              <DogCard></DogCard>
+              <DogCard></DogCard>
+              <DogCard></DogCard>
+              <DogCard></DogCard>
+              <DogCard></DogCard>
+              <DogCard></DogCard>
+              <DogCard></DogCard>
+              <DogCard></DogCard>
+              <DogCard></DogCard>
+              <DogCard></DogCard>
+              <DogCard></DogCard>
+              <DogCard></DogCard>
+              <DogCard></DogCard>
+            </Grid>
+          </Grid>
+
+        </Grid>
+
       </Container>
     </Box>
   );

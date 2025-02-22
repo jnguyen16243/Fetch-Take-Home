@@ -1,4 +1,5 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect } from "react";
 import { createContext, useContext, useState, ReactNode } from "react";
 
 interface AuthContextType {
@@ -10,10 +11,26 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   const login = () => setIsAuthenticated(true);
   const logout = () => setIsAuthenticated(false);
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/auth/check", { withCredentials: true }) 
+      .then((response) => {
+        if (response.status === 200) {
+          console.log("Auth check success", response.data);
+          setIsAuthenticated(true);
+        }
+      })
+      .catch((error) => {
+        console.log("auth check failed", error)
+        setIsAuthenticated(false);
+      });
+  }, []);
+
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, login, logout }}>

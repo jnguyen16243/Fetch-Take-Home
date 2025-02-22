@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import axios from "axios";
+import authMiddleware from "../middleware/authMiddleware";
 
 const router = Router();
 const FETCH_API_URL = "https://frontend-take-home-service.fetch.com";
@@ -7,6 +8,15 @@ const FETCH_API_URL = "https://frontend-take-home-service.fetch.com";
 router.post("/login", async (req: Request, res: Response): Promise<void> => {
   try {
     const { name, email } = req.body;
+    if (
+      typeof name !== "string" ||
+      typeof email !== "string" ||
+      name.length >= 100 ||
+      email.length >= 100
+    ) {
+      res.status(400).json({ error: "Invalid input. Name and email must be strings and less than 100 characters." });
+      return;
+    }
     const response = await axios.post(`${FETCH_API_URL}/auth/login`, { name, email }, { withCredentials: true });
 
     if (!response.headers["set-cookie"]) {
@@ -62,5 +72,10 @@ router.post("/logout", async (req: Request, res: Response): Promise<void> => {
   } catch (error: any) {
     res.status(error.response?.status || 500).json({ error: "Internal Server Error" });
   }
+});
+
+router.get("/check", authMiddleware, async (req: Request,res: Response): Promise <void> =>{
+  res.status(200).json({ authenticated: true, message: "User is authenticated"});
+  return;
 });
 export default router;
