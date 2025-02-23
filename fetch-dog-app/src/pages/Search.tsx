@@ -2,18 +2,19 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.tsx";
 
-import { Box, Button, colors, Container, useTheme } from "@mui/material";
+import { Box, Button, Container, useTheme } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import AppBarComponent from "../components/AppBarComponent.tsx";
 import DogCard from "../components/DogCard.tsx";
 import LoadingScreen from "../components/LoadingScreen/LoadingScreen.tsx";
 import SearchFilters from "../components/Search/SearchFilters.tsx";
-import { ageRanges } from "../constants.ts";
+import { AgeRange, ageRanges } from "../constants.ts";
+
 interface FiltersState {
   selectedBreeds: string[];
-  selectedAgeLabel: string;
   city: string;
   state: string;
+  age: AgeRange; 
 }
 
 const Search: React.FC = () => {
@@ -25,13 +26,11 @@ const Search: React.FC = () => {
 
   const [filters, setFilters] = useState<FiltersState>({
     selectedBreeds: [],
-    selectedAgeLabel: "",
     city: "",
     state: "",
+    age: { label: "", min: 0, max: 10 },
   });
 
-  // Convert selected label to min/max when making API request
-  const selectedAgeRange = ageRanges.find((age) => age.label === filters.selectedAgeLabel) || null;
 
   useEffect(() => {
     if (isAuthenticated === null) return;
@@ -44,8 +43,11 @@ const Search: React.FC = () => {
 
   useEffect(() => {
     console.log("Filters updated:", filters);
-    console.log(selectedAgeRange);
-  }, [filters]); // Runs whenever `filters` changes
+  }, [filters]); 
+
+  function handleSearch(): void {
+    throw new Error("Function not implemented.");
+  }
 
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "secondary.main" }}>
@@ -60,6 +62,7 @@ const Search: React.FC = () => {
               <Button
                 variant="contained"
                 fullWidth
+                onClick={handleSearch}
                 sx={{ backgroundColor: theme.palette.common.white, color: theme.palette.primary.main }}
               >
                 Search

@@ -5,7 +5,7 @@ import validateSearchDogs from "../middleware/validateSearchDogs";
 
 const router = Router();
 const FETCH_API_URL = "https://frontend-take-home-service.fetch.com";
-
+const MAX_DOG_IDS = 100;
 
 const breedsHandler: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -28,25 +28,54 @@ const breedsHandler: RequestHandler = async (req: Request, res: Response): Promi
   }
 };
 
-//TODO: Clean request input 
+
+
+const fetchDogDetails = async (dogIds: string[], headers: Record<string, string>) => {
+  if (!dogIds || dogIds.length === 0) {
+    throw new Error("No valid dog IDs provided.");
+  }
+
+  const truncatedDogIds = dogIds.slice(0, MAX_DOG_IDS);
+
+  const { data } = await axios.post(`${FETCH_API_URL}/dogs`, truncatedDogIds, {
+    headers,
+    withCredentials: true,
+  });
+
+  return data;
+};
+
 const searchDogsHandler: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
-    const response = await axios.get(`${FETCH_API_URL}/dogs/search`, {
+    const headers = {
+      Cookie: req.headers.cookie || "",
+      Authorization: `Bearer ${req.authToken}`,
+      "Content-Type": "application/json",
+    };
+
+    const { data: { resultIds: dogIds } = {} } = await axios.get(`${FETCH_API_URL}/dogs/search`, {
       params: req.query,
-      headers: {
-        Cookie: req.headers.cookie,
-        Authorization: `Bearer ${req.authToken}`,
-        "Content-Type": "application/json"
-      },
-      withCredentials: true
+      headers,
+      withCredentials: true,
     });
 
-    res.json(response.data);
-  } catch (error: unknown) {
-    const axiosError = error as AxiosError;
+    if (!dogIds || dogIds.length === 0) {
+       res.status(404).json({ message: "No dogs found :(" });
+       return;
+    }
 
+    console.log(`Found ${dogIds.length} dogs.`);
+
+    const dogData = await fetchDogDetails(dogIds, headers);
+
+    res.json(dogData);
+    console.log(`Returned ${dogData.length} dogs.`);
+  } catch (error) {
+    console.error("Error fetching dogs:", error);
+
+    const axiosError = error as AxiosError;
     res.status(axiosError.response?.status || 500).json({
-      error: axiosError.response?.data || "Error fetching dogs"
+      error: axiosError.response?.data || "An error occurred while fetching dogs.",
     });
   }
 };
