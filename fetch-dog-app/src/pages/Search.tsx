@@ -8,6 +8,9 @@ import DogCard from "../components/DogCard.tsx";
 import AppBarComponent from "../components/AppBarComponent.tsx";
 import SearchFilters from "../components/Search/SearchFilters.tsx";
 import { ageRanges } from "../constants.ts";
+import LoadingScreen from "../components/LoadingScreen/LoadingScreen.tsx";
+
+
 const Search: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const { isAuthenticated } = useAuth();
@@ -28,21 +31,16 @@ const Search: React.FC = () => {
     if (isAuthenticated === null) return;
     if (isAuthenticated === false) {
       navigate("/");
-    } else {
+    } else {      
       setLoading(false);
     }
   }, [isAuthenticated, navigate]);
 
-  if (loading) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
-        <CircularProgress />
-      </Box>
-    );
-  }
+
 
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "secondary.main" }}>
+      {loading && <LoadingScreen />} 
       <AppBarComponent></AppBarComponent>
 
       <Container sx={{ mt: 4 }}>
