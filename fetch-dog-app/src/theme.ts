@@ -10,7 +10,7 @@ const theme = createTheme({
     },
     secondary: {
       main: "#f8b95a", // Warm sunset orange
-      light: "#fbcf62",
+      light: "#FFFFFF",
       dark: "#f6b156",
       contrastText: "#000000",
     },
