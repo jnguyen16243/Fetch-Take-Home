@@ -1,28 +1,45 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.tsx";
-import { fetchBreeds } from "../api/dogApi.ts";
-import { Dog } from "../types.ts";
-import { Container, Typography, CircularProgress, List, ListItem, AppBar, Toolbar, IconButton, Button, TableContainer, Paper, Table, TableBody, TableCell, TableHead, TableRow, TextField, Box, useTheme, Slider, FormControl, FormLabel, FormControlLabel, Radio, RadioGroup, Stack, Select, MenuItem, InputLabel, Card, CardMedia, CardContent } from "@mui/material";
+
+import { Container, Typography, CircularProgress, Box, useTheme, FormControl, Stack, Select, MenuItem, InputLabel } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import DogCard from "../components/DogCard.tsx";
 import AppBarComponent from "../components/AppBarComponent.tsx";
+import SearchFilters from "../components/Search/SearchFilters.tsx";
+import { ageRanges } from "../constants.ts";
 const Search: React.FC = () => {
-  const [dogs, setDogs] = useState<Dog[]>([]);
-  const [breeds, setBreeds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const theme = useTheme();
-  useEffect(() => {
-    if (isAuthenticated === null) return; //
+  const [selectedBreeds, setSelectedBreeds] = useState<string[]>([]);
+  const [selectedAgeLabel, setSelectedAgeLabel] = useState<string>("");
+  const [city, setCity] = useState<string>("");
+  const [state, setState] = useState<string>("");
 
-  if (isAuthenticated === false) {
-    navigate("/");
-  } else {
-    setLoading(false);
-  }
+  // Convert selected label to min/max when making API request
+    const selectedAgeRange = ageRanges.find((age) => age.label === selectedAgeLabel) || null;
+
+  const handleBreedChange = (event: React.SyntheticEvent, newValue: string[]) => {
+    setSelectedBreeds(newValue);
+  };
+  useEffect(() => {
+    if (isAuthenticated === null) return;
+    if (isAuthenticated === false) {
+      navigate("/");
+    } else {
+      setLoading(false);
+    }
   }, [isAuthenticated, navigate]);
+
+  if (loading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "secondary.main" }}>
@@ -31,36 +48,18 @@ const Search: React.FC = () => {
       <Container sx={{ mt: 4 }}>
         <Grid container spacing={3} alignItems="flex-start">
           <Grid size={{ xs: 12, md: 3 }} id="search-section">
-            <Paper style={{ padding: "16px" }}>
-              <Typography variant="h6">Search</Typography>
-              {/* Stack for vertical arrangement */}
-              <Stack spacing={2} mt={2}>
-                <TextField fullWidth label="Address" variant="outlined" />
-
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Age</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    //value={age}
-                    label="Age"
-                  //onChange={handleChange} update variables!
-                  >
-                    <MenuItem value={10}>Puppy</MenuItem>
-                    <MenuItem value={20}>Young</MenuItem>
-                    <MenuItem value={30}>Adult</MenuItem>
-                    <MenuItem value={30}>Senior</MenuItem>
-                  </Select>
-                </FormControl>
-
-                <TextField fullWidth label="Breed" variant="outlined" />
-                <Button variant="contained" color="primary" fullWidth>
-                  Search
-                </Button>
-              </Stack>
-            </Paper>
+            <SearchFilters
+              selectedBreeds={selectedBreeds}
+              setSelectedBreeds={setSelectedBreeds}
+              selectedAgeLabel={selectedAgeLabel}
+              setSelectedAgeLabel={setSelectedAgeLabel}
+              city={city}
+              setCity={setCity}
+              state={state}
+              setState={setState}
+            />
           </Grid>
-          <Grid size={{xs:12, md:9}} id="dog-list">
+          <Grid size={{ xs: 12, md: 9 }} id="dog-list">
             <Grid container spacing={3}>
               <DogCard></DogCard>
               <DogCard></DogCard>

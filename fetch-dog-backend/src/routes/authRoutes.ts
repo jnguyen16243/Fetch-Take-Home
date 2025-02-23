@@ -51,7 +51,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-router.post("/logout", async (req: Request, res: Response): Promise<void> => {
+router.post("/logout", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
     if (!req.headers.cookie) {
       res.status(401).json({ error: "No authentication cookie found" });
