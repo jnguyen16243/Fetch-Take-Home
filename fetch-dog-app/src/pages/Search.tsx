@@ -2,15 +2,18 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.tsx";
 
-import { Box, Button, Container, useTheme } from "@mui/material";
+import { Box, Button, CircularProgress, Container, useTheme } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import AppBarComponent from "../components/AppBarComponent.tsx";
 import DogCard from "../components/DogCard.tsx";
 import LoadingScreen from "../components/LoadingScreen/LoadingScreen.tsx";
 import SearchFilters from "../components/Search/SearchFilters.tsx";
-import { AgeRange, ageRanges } from "../constants.ts";
+import { AgeRange } from "../constants.ts";
+import { searchDogs } from "../api/dogApi.ts";
+import { Dog } from "../types.ts";
+import DogList from "../components/DogList/DogList.tsx";
 
-interface FiltersState {
+export interface FiltersState {
   selectedBreeds: string[];
   city: string;
   state: string;
@@ -19,7 +22,10 @@ interface FiltersState {
 
 const Search: React.FC = () => {
   const [loading, setLoading] = useState(true);
+  const [dogs, setDogs] = useState<Dog[]>([]);
+  const [favoritedDogs, setFavoritedDogs] = useState<string[]>([]);
   const { isAuthenticated } = useAuth();
+
   const navigate = useNavigate();
   const theme = useTheme();
 
@@ -41,17 +47,30 @@ const Search: React.FC = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  useEffect(() => {
-    console.log("Filters updated:", filters);
-  }, [filters]); 
+  const handleSearchDogs = async () => {
+    try {
+      setLoading(true);
+  
+      const responseDogs = await searchDogs(filters);
+  
+      await new Promise((resolve) => setTimeout(resolve, 1000)); 
+  
+      setDogs(responseDogs);
+      setLoading(false);
+      console.log("Dogs found:", responseDogs);
+    } catch (error) {
+      console.error("Error fetching dogs:", error);
+      setLoading(false);
+    }
+  };
+  
+  
+  
 
-  function handleSearch(): void {
-    throw new Error("Function not implemented.");
-  }
 
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "secondary.main" }}>
-      {loading && <LoadingScreen />}
+      {loading && <LoadingScreen/>}
       <AppBarComponent></AppBarComponent>
 
       <Container sx={{ mt: 4 }}>
@@ -62,7 +81,7 @@ const Search: React.FC = () => {
               <Button
                 variant="contained"
                 fullWidth
-                onClick={handleSearch}
+                onClick={handleSearchDogs}
                 sx={{ backgroundColor: theme.palette.common.white, color: theme.palette.primary.main }}
               >
                 Search
@@ -71,20 +90,7 @@ const Search: React.FC = () => {
           </Grid>
 
           <Grid size={{ xs: 12, md: 9 }} id="dog-list">
-            <Grid container spacing={3}>
-              <DogCard></DogCard>
-              <DogCard></DogCard>
-              <DogCard></DogCard>
-              <DogCard></DogCard>
-              <DogCard></DogCard>
-              <DogCard></DogCard>
-              <DogCard></DogCard>
-              <DogCard></DogCard>
-              <DogCard></DogCard>
-              <DogCard></DogCard>
-              <DogCard></DogCard>
-              <DogCard></DogCard>
-            </Grid>
+            <DogList dogs={dogs} />
           </Grid>
 
         </Grid>

@@ -6,7 +6,14 @@ import validateSearchDogs from "../middleware/validateSearchDogs";
 const router = Router();
 const FETCH_API_URL = "https://frontend-take-home-service.fetch.com";
 const MAX_DOG_IDS = 100;
-
+export interface Dog {
+  id: string;
+  name: string;
+  breed: string;
+  age: number;
+  img: string;
+  zip_code: string;
+}
 const breedsHandler: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const response = await axios.get(`${FETCH_API_URL}/dogs/breeds`, {
@@ -37,12 +44,24 @@ const fetchDogDetails = async (dogIds: string[], headers: Record<string, string>
 
   const truncatedDogIds = dogIds.slice(0, MAX_DOG_IDS);
 
-  const { data } = await axios.post(`${FETCH_API_URL}/dogs`, truncatedDogIds, {
+  const { data: dogResponse } = await axios.post(`${FETCH_API_URL}/dogs`, truncatedDogIds, {
     headers,
     withCredentials: true,
   });
 
-  return data;
+  if(!dogResponse || !Array.isArray(dogResponse)){
+    throw new Error("Invalid response from dogs details")
+  }
+  console.log(dogResponse)
+  return dogResponse.map((dog: any) => ({
+    id: dog.id || "unknown", 
+    name: dog.name || "Lucky",
+    breed: dog.breed || "Mutt",
+    age: typeof dog.age === "number" ? dog.age : 0, 
+    img: dog.img || undefined,
+    zip_code: dog.zip_code || 0,
+  }));
+
 };
 
 const searchDogsHandler: RequestHandler = async (req: Request, res: Response): Promise<void> => {

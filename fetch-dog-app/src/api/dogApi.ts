@@ -1,5 +1,6 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { Dog, User } from "../types";
+import { FiltersState } from "../pages/Search";
 
 const API_URL = "http://localhost:5000/api";
 
@@ -17,9 +18,35 @@ export const fetchBreeds = async (): Promise<string[]> => {
 };
 
 
-export const searchDogs = async (filters: Record<string, any>): Promise<string[]> => {
-  const response = await axios.get(`${API_URL}/dogs/search`, { params: filters, withCredentials: true });
-  return response.data.resultIds; // Returns an array of dog IDs
+export const searchDogs = async (filters: FiltersState): Promise<Dog[]> => {
+  try {
+    const searchRequest = {
+      breeds: filters.selectedBreeds,
+      ageMin: filters.age.min,
+      ageMax: filters.age.max,
+    };
+
+    const response = await axios.get(`${API_URL}/dogs/search`, {
+      params: searchRequest,
+      withCredentials: true,
+    });
+    console.log(response);
+    if (!response.data || !Array.isArray(response.data)) {
+      throw new Error("Invalid response format from API.");
+    }
+
+    return response.data.map((dog: any) => ({
+      id: dog.id || "unknown",
+      name: dog.name || "Lucky",
+      breed: dog.breed || "Mutt",
+      age: typeof dog.age === "number" ? dog.age : 0,
+      zip_code: dog.zip_code || "Unknown",
+      img: dog.img,
+    }));
+  } catch (error) {
+    console.error("Error fetching dogs:", (error as AxiosError).message);
+    return [];
+  }
 };
 
 

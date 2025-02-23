@@ -1,27 +1,29 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardMedia, Typography, IconButton, Button, Box, useTheme } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import theme from "../theme";
+import { Box, Card, CardContent, CardMedia, IconButton, Typography, useTheme } from "@mui/material";
+import React from "react";
+import { Dog } from "../types";
 
-const DogCard: React.FC = () => {
-  const [favorited, setFavorited] = useState(false);
+interface DogCardProps {
+  dog: Dog;
+  isFavorited: boolean;
+  onFavoriteToggle: (dogId: string) => void;
+  isLoading?: boolean;
+}
+
+const DogCard: React.FC<DogCardProps> = ({ dog, isFavorited, onFavoriteToggle }) => {
   const theme = useTheme();
 
-  const handleFavoriteClick = () => {
-    setFavorited((prev) => !prev);
-  };
-
   return (
-    <Card sx={{ maxWidth: 345, boxShadow: 3, borderRadius: 2, position: "relative" }}>
-      <Box sx={{ position: "relative" }}>
+    <Card sx={{ width: 300, height: 400, display: "flex", flexDirection: "column", boxShadow: 3, borderRadius: 2 }}>
+      <Box sx={{ position: "relative", height: 200 }}>
         <CardMedia
           component="img"
-          height="200"
-          image="https://frontend-take-home.fetch.com/dog-images/n02085620-Chihuahua/n02085620_1620.jpg"
-          alt="Flo"
+          image={dog.img}
+          alt={dog.name}
+          sx={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
         <IconButton
-          onClick={handleFavoriteClick}
+          onClick={() => onFavoriteToggle(dog.id)}
           sx={{
             position: "absolute",
             top: 8,
@@ -30,23 +32,19 @@ const DogCard: React.FC = () => {
             "&:hover": { backgroundColor: "rgba(255, 255, 255, 1)" },
           }}
         >
-           <FavoriteIcon sx={{ color: favorited ? theme.palette.primary.main : theme.palette.grey[500] }} />
+          <FavoriteIcon sx={{ color: isFavorited ? theme.palette.primary.main : theme.palette.grey[500] }} />
         </IconButton>
       </Box>
-        
-      {/* Dog Details */}
-      <CardContent>
-        <Typography variant="h6" component="div">
-          Flo
+      <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+        <Typography variant="h6">{dog.name}</Typography>
+        <Typography variant="body2" color="text.secondary">
+          <strong>Age:</strong> {dog.age} years
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          <strong>Age:</strong> 12 years
+          <strong>Breed:</strong> {dog.breed}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          <strong>Breed:</strong> Chihuahua
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          <strong>Zip Code:</strong> 85250
+          <strong>Zip Code:</strong> {dog.zipCode}
         </Typography>
       </CardContent>
     </Card>
