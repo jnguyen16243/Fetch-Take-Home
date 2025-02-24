@@ -21,12 +21,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       .get("http://localhost:5000/api/auth/check", { withCredentials: true }) 
       .then((response) => {
         if (response.status === 200) {
-          console.log("Auth check success", response.data);
           setIsAuthenticated(true);
         }
       })
       .catch((error) => {
-        console.log("auth check failed", error)
+        console.log("auth check failed")
         setIsAuthenticated(false);
       });
   }, []);

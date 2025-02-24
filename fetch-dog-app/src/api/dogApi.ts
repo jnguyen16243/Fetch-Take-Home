@@ -18,20 +18,52 @@ export const fetchBreeds = async (): Promise<string[]> => {
 };
 
 
+
+let lastCity: string | null = null;
+let lastState: string | null = null;
+let cachedZipCodes: string[] = [];
+
 export const searchDogs = async (filters: FiltersState, from?: string, sort?: string): Promise<{ dogs: Dog[]; fromCursor?: string }> => {
   try {
+    let zipCodes: string[] = [];
+
+    // Only call locations API if city or state has changed
+    if ((filters.city && filters.city !== lastCity) || (filters.state && filters.state !== lastState)) {
+      const locationSearchRequest = { states: [filters.state], city: filters.city, size: 100 };
+      console.log("Calling locations API with:", locationSearchRequest);
+
+      const zipCodeResponse = await axios.post(`${API_URL}/locations/search`, locationSearchRequest, { withCredentials: true });
+
+      if (zipCodeResponse.data && Array.isArray(zipCodeResponse.data.zipCodes)) {
+        zipCodes = zipCodeResponse.data.zipCodes;
+        // Cache the result
+        cachedZipCodes = zipCodes;
+        lastCity = filters.city;
+        lastState = filters.state;
+      } else {
+        console.warn("No zip codes found for the given location.");
+        cachedZipCodes = [];
+      }
+    } else {
+      console.log("Using cached zip codes:", cachedZipCodes);
+      zipCodes = cachedZipCodes;
+    }
+
+    // Prepare search request for dogs
     const searchRequest = {
       breeds: filters.selectedBreeds,
       ageMin: filters.age.min,
       ageMax: filters.age.max,
-      from: from
+      from: from,
+      zipCodes: zipCodes.length > 0 ? zipCodes : undefined,
+      sort: sort || undefined, 
     };
-
+    console.log("calling dogs search", searchRequest)
     const response = await axios.get(`${API_URL}/dogs/search`, {
       params: searchRequest,
       withCredentials: true,
     });
-    console.log(response);
+
     if (!response.data || !response.data.dogs || !Array.isArray(response.data.dogs)) {
       throw new Error("Invalid response format from API.");
     }
@@ -45,13 +77,15 @@ export const searchDogs = async (filters: FiltersState, from?: string, sort?: st
         zip_code: dog.zip_code || "Unknown",
         img: dog.img,
       })),
-      fromCursor: response.data.fromCursor || undefined, // Handle next query properly
+      fromCursor: response.data.fromCursor || undefined,
     };
   } catch (error) {
     console.error("Error fetching dogs:", (error as AxiosError).message);
     return { dogs: [], fromCursor: undefined };
   }
 };
+
+
 
 
 export const fetchDogsByIds = async (dogIds: string[]): Promise<Dog[]> => {

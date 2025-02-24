@@ -24,6 +24,8 @@ const Search: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [dogs, setDogs] = useState<Dog[]>([]);
   const [from, setFrom] = useState<string | undefined>(undefined);
+  const [favoritedDogs, setFavoritedDogs] = useState<Dog[]>([]);
+  const [showFavorites, setShowFavorites] = useState(false);
 
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -48,6 +50,10 @@ const Search: React.FC = () => {
       setLoading(false);
     }
   }, [isAuthenticated, navigate]);
+  // useEffect(()=>{
+  //   console.log("from cursor", from)
+  //   console.table(dogs)
+  // },[from, dogs]);
 
   const handleSearchDogs = async () => {
     try {
@@ -58,15 +64,15 @@ const Search: React.FC = () => {
   
       setDogs(response.dogs);
       setFrom(response.fromCursor)
+      
       setLoading(false);
-      console.log("Dogs found:", response.dogs, "from cursor", response.fromCursor);
     } catch (error) {
       console.error("Error fetching dogs:", error);
       setLoading(false);
     }
   };
   const handleFetchMoreDogs = async () => {
-    if (!from || loading) return; // Stop if no more results or already loading
+    if (!from ||from === '0' || loading) return; // Stop if no more results or already loading
   
     try {
       setLoading(true);
@@ -74,7 +80,7 @@ const Search: React.FC = () => {
       
       await new Promise((resolve) => setTimeout(resolve, 1000));
   
-      setDogs((prevDogs) => [...prevDogs, ...response.dogs]); // Append new dogs
+      setDogs((prevDogs) => [...prevDogs, ...response.dogs]); 
       setFrom(response.fromCursor); // Update next query for pagination
   
       setLoading(false);
@@ -86,7 +92,6 @@ const Search: React.FC = () => {
 
   useEffect(() => {
     if (!from) return;
-    console.log("next query", from)
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
@@ -103,11 +108,14 @@ const Search: React.FC = () => {
     return () => observer.disconnect();
   }, [from, loading]);
 
-  
+  const handleShowFavorites = () => {
+    setShowFavorites((prev) => !prev);
+  };
+
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "secondary.main" }}>
       {loading && <LoadingScreen/>}
-      <AppBarComponent></AppBarComponent>
+      <AppBarComponent onShowFavorites={handleShowFavorites} showFavorites={showFavorites} />
 
       <Container sx={{ mt: 4 }}>
         <Grid container spacing={3} alignItems="flex-start">

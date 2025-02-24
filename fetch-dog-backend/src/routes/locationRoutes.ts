@@ -38,25 +38,28 @@ const locationsHandler: RequestHandler = async (req: Request, res: Response): Pr
 
 const searchLocationHandler: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
-    const {body} = req
-    const response = await axios.post(`${FETCH_API_URL}/locations/search`, body,{
+    const { body } = req;
+    const response = await axios.post(`${FETCH_API_URL}/locations/search`, body, {
       headers: {
         Cookie: req.headers.cookie,
         Authorization: `Bearer ${req.authToken}`,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      withCredentials: true
+      withCredentials: true,
     });
-
-    res.json(response.data);
+    console.log(response.data)
+    const zipCodes = response.data.results?.map((location: { zip_code: string }) => location.zip_code) || [];
+    console.log("zip codes", zipCodes)
+    res.json({ zipCodes: zipCodes });
   } catch (error: unknown) {
     const axiosError = error as AxiosError;
 
     res.status(axiosError.response?.status || 500).json({
-      error: axiosError.response?.data || "Error fetching locations"
+      error: axiosError.response?.data || "Error fetching locations",
     });
   }
 };
+
 
 router.post("/", authMiddleware, locationsHandler);
 router.post("/search",authMiddleware,validateLocationSearchBody, searchLocationHandler);

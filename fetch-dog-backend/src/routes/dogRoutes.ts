@@ -30,7 +30,7 @@ const breedsHandler: RequestHandler = async (req: Request, res: Response): Promi
     const axiosError = error as AxiosError;
 
     res.status(axiosError.response?.status || 500).json({
-      error: axiosError.response?.data || "Error fetching breeds"
+      error: "Error fetching breeds"
     });
   }
 };
@@ -52,7 +52,6 @@ const fetchDogDetails = async (dogIds: string[], headers: Record<string, string>
   if(!dogResponse || !Array.isArray(dogResponse)){
     throw new Error("Invalid response from dogs details")
   }
-  console.log(dogResponse)
   return dogResponse.map((dog: any) => ({
     id: dog.id || "unknown", 
     name: dog.name || "Lucky",
@@ -71,14 +70,15 @@ const searchDogsHandler: RequestHandler = async (req: Request, res: Response): P
       Authorization: `Bearer ${req.authToken}`,
       "Content-Type": "application/json",
     };
-
+    console.log(req.query)
     const { data: { resultIds: dogIds, next: next } = {} } = await axios.get(`${FETCH_API_URL}/dogs/search`, {
       params: req.query,
       headers,
       withCredentials: true,
     });
-
+    
     if (!dogIds || dogIds.length === 0) {
+      console.log("no dogs found")
        res.status(404).json({ message: "No dogs found :(" });
        return;
     }
@@ -96,7 +96,6 @@ const searchDogsHandler: RequestHandler = async (req: Request, res: Response): P
       fromCursor: fromCursor,
     });
     // console.log(`Returned ${dogData.length} dogs.`);
-    console.log("next query", next);
   } catch (error) {
     console.error("Error fetching dogs:", error);
 
