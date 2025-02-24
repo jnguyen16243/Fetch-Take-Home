@@ -6,7 +6,7 @@ import { Dog } from "../types";
 interface DogCardProps {
   dog: Dog;
   isFavorited: boolean;
-  onFavoriteToggle: (dogId: string) => void;
+  onFavoriteToggle: (dog: Dog) => void;
   isLoading?: boolean;
 }
 
@@ -14,7 +14,7 @@ const DogCard: React.FC<DogCardProps> = ({ dog, isFavorited, onFavoriteToggle })
   const theme = useTheme();
 
   return (
-    <Card sx={{ width: 300, height: 400, display: "flex", flexDirection: "column", boxShadow: 3, borderRadius: 2 }}>
+    <Card sx={{ maxWidth: 300, height: 350, display: "flex", flexDirection: "column", boxShadow: 3, borderRadius: 2 }}>
       <Box sx={{ position: "relative", height: 200 }}>
         <CardMedia
           component="img"
@@ -23,7 +23,10 @@ const DogCard: React.FC<DogCardProps> = ({ dog, isFavorited, onFavoriteToggle })
           sx={{ width: "100%", height: "100%", objectFit: "cover" }}
         />
         <IconButton
-          onClick={() => onFavoriteToggle(dog.id)}
+          onClick={() => {
+            onFavoriteToggle(dog);
+          }}
+            
           sx={{
             position: "absolute",
             top: 8,
@@ -44,7 +47,7 @@ const DogCard: React.FC<DogCardProps> = ({ dog, isFavorited, onFavoriteToggle })
           <strong>Breed:</strong> {dog.breed}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          <strong>Zip Code:</strong> {dog.zipCode}
+          <strong>Zip Code:</strong> {dog.zip_code}
         </Typography>
       </CardContent>
     </Card>

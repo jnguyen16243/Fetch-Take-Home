@@ -89,7 +89,7 @@ const Search: React.FC = () => {
             </Box>
           </Grid>
 
-          <Grid size={{ xs: 12, md: 9 }} id="dog-list">
+          <Grid size={{ xs: 12, md: 9 }} sx = {{flexGrow: 1}}id="dog-list">
             <DogList dogs={dogs} />
           </Grid>
 
