@@ -9,21 +9,14 @@ interface DogListProps {
     dogs: Dog[];
 }
 
-const DogList: React.FC<DogListProps> = ({ dogs }) => {
-    const [favoritedDogs, setFavoritedDogs] = useState<Dog[]>([]);
+const DogList: React.FC<{ dogs: Dog[]; onFavoriteToggle: (dog: Dog) => void; favoritedDogs: Dog[] }> = ({
+    dogs,
+    onFavoriteToggle,
+    favoritedDogs,
+  }) => {
+
     const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
-    const toggleFavorite = (dog: Dog) => {
-        setFavoritedDogs((prev) => {
-            const isAlreadyFavorited = prev.some((favDog) => favDog.id === dog.id);
-
-            if (isAlreadyFavorited) {
-                return prev.filter((favDog) => favDog.id !== dog.id);
-            } else {
-                return [...prev, dog];
-            }
-        });
-    };
 
     const sortedDogs = useMemo(() => {
         return [...dogs].sort((a, b) =>
@@ -51,7 +44,7 @@ const DogList: React.FC<DogListProps> = ({ dogs }) => {
                             key={dog.id}
                             dog={dog}
                             isFavorited={favoritedDogs.some((favDog) => favDog.id === dog.id)}
-                            onFavoriteToggle={toggleFavorite}
+                            onFavoriteToggle={onFavoriteToggle}
                         />
                     </Grid>
                 ))}

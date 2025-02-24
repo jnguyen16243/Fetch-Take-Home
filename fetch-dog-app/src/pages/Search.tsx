@@ -5,11 +5,10 @@ import { useAuth } from "../context/AuthContext.tsx";
 import { Box, Button, CircularProgress, Container, useTheme } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import AppBarComponent from "../components/AppBarComponent.tsx";
-import DogCard from "../components/DogCard.tsx";
 import LoadingScreen from "../components/LoadingScreen/LoadingScreen.tsx";
 import SearchFilters from "../components/Search/SearchFilters.tsx";
 import { AgeRange } from "../constants.ts";
-import { searchDogs } from "../api/dogApi.ts";
+import { matchDog, searchDogs } from "../api/dogApi.ts";
 import { Dog } from "../types.ts";
 import DogList from "../components/DogList/DogList.tsx";
 
@@ -50,10 +49,13 @@ const Search: React.FC = () => {
       setLoading(false);
     }
   }, [isAuthenticated, navigate]);
-  // useEffect(()=>{
-  //   console.log("from cursor", from)
-  //   console.table(dogs)
-  // },[from, dogs]);
+  useEffect(() => {
+    handleSearchDogs();
+  }, []);
+  useEffect(()=>{
+    // console.log("from cursor", from)
+    console.table(favoritedDogs)
+  },[from, favoritedDogs]);
 
   const handleSearchDogs = async () => {
     try {
@@ -111,11 +113,35 @@ const Search: React.FC = () => {
   const handleShowFavorites = () => {
     setShowFavorites((prev) => !prev);
   };
+  const toggleFavorite = (dog: Dog) => {
+    setFavoritedDogs((prev) =>
+      prev.some((favDog) => favDog.id === dog.id)
+        ? prev.filter((favDog) => favDog.id !== dog.id) // Remove if already favorited
+        : [...prev, dog] // Add to favorites
+    );
+  };
+
+  const handleFindMatch = async () => {
+    if (favoritedDogs.length === 0) {
+      alert("You need to favorite at least one dog before finding a match!");
+      return;
+    }
+
+    try {
+      const matchedDogId = await matchDog(favoritedDogs.map((dog) => dog.id));
+      const matchedDog = favoritedDogs.find(fav => fav.id === matchedDogId)
+      console.log(matchedDog);
+      navigate("/match", { state: { matchedDog: matchedDog} }); // Redirect with matched dog data
+    } catch (error) {
+      console.error("Error finding match:", error);
+      alert("Something went wrong. Please try again!");
+    }
+  };
 
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "secondary.main" }}>
       {loading && <LoadingScreen/>}
-      <AppBarComponent onShowFavorites={handleShowFavorites} showFavorites={showFavorites} />
+      <AppBarComponent onFindMatch={handleFindMatch} onShowFavorites={handleShowFavorites} showFavorites={showFavorites} />
 
       <Container sx={{ mt: 4 }}>
         <Grid container spacing={3} alignItems="flex-start">
@@ -134,8 +160,12 @@ const Search: React.FC = () => {
           </Grid>
 
           <Grid size={{ xs: 12, md: 9 }} sx = {{flexGrow: 1}}id="dog-list">
-            <DogList dogs={dogs} />
-            <div ref={loadMoreRef} style={{ height: 20, marginBottom: 40 }} />
+          <DogList
+              dogs={showFavorites ? favoritedDogs : dogs} // Show only favorited dogs if toggled
+              onFavoriteToggle={toggleFavorite}
+              favoritedDogs={favoritedDogs}
+            />
+            {!showFavorites && <div ref={loadMoreRef} style={{ height: 20, marginBottom: 40 }} />}
           </Grid>
 
         </Grid>

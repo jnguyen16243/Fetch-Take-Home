@@ -5,6 +5,7 @@ import theme from "./theme.ts";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import Login from "./pages/Login.tsx";
 import Search from "./pages/Search.tsx";
+import MatchPage from "./pages/MatchPage.tsx";
 
 const App: React.FC = () => {
   return (
@@ -15,6 +16,7 @@ const App: React.FC = () => {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/match" element={<MatchPage />} />
         </Routes>
       </Router>
     </AuthProvider>

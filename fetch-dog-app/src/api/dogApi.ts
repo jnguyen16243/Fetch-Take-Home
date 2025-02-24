@@ -88,7 +88,16 @@ export const searchDogs = async (filters: FiltersState, from?: string, sort?: st
 
 
 
-export const fetchDogsByIds = async (dogIds: string[]): Promise<Dog[]> => {
-  const response = await axios.post(`${API_URL}/dogs`, dogIds, { withCredentials: true });
-  return response.data; // Returns an array of Dog objects
+export const matchDog = async (dogIds: string[]): Promise<string> => {
+  try {
+    const response = await axios.post(`${API_URL}/dogs/match`, dogIds, { withCredentials: true });
+    
+    console.log("Matched Dog ID:", response.data.matchedDogId);
+    
+    return response.data.matchedDogId;
+  } catch (error) {
+    console.error("Error fetching matched dog:", error);
+    throw error;
+  }
 };
+

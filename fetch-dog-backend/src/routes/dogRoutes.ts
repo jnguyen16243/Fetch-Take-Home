@@ -147,9 +147,11 @@ const matchDogHandler: RequestHandler = async (req: Request, res: Response): Pro
   try {
     if (!Array.isArray(req.body) || req.body.length === 0) {
        res.status(400).json({ error: "Invalid request: Must provide an array of dog IDs" });
+       return;
     }
     if (req.body.length > 100) {
        res.status(400).json({ error: "Too many IDs: Maximum is 100" });
+       return;
     }
     //Match dog 
     const matchResponse = await axios.post(`${FETCH_API_URL}/dogs/match`, req.body, {
@@ -163,16 +165,16 @@ const matchDogHandler: RequestHandler = async (req: Request, res: Response): Pro
 
     const matchedDogId = matchResponse.data.match;
     //Use matched dog id to get match dog information 
-    const dogResponse = await axios.post(`${FETCH_API_URL}/dogs`, [matchedDogId], {
-      headers: {
-        Cookie: req.headers.cookie,
-        Authorization: `Bearer ${req.authToken}`,
-        "Content-Type": "application/json",
-      },
-      withCredentials: true,
-    });
+    // const dogResponse = await axios.post(`${FETCH_API_URL}/dogs`, [matchedDogId], {
+    //   headers: {
+    //     Cookie: req.headers.cookie,
+    //     Authorization: `Bearer ${req.authToken}`,
+    //     "Content-Type": "application/json",
+    //   },
+    //   withCredentials: true,
+    // });
 
-    res.json(dogResponse.data[0]); 
+    res.json({matchedDogId: matchedDogId}); 
   } catch (error: unknown) {
     const axiosError = error as AxiosError;
     res.status(axiosError.response?.status || 500).json({
