@@ -20,7 +20,7 @@ const AppBarComponent: React.FC = () => {
         }
     };
     return (
-        <AppBar position="static">
+        <AppBar position="sticky">
             <Toolbar>
                 <Typography variant="h6" sx={{ flexGrow: 1 }}>
                     Fetch

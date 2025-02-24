@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.tsx";
 
@@ -23,11 +23,13 @@ export interface FiltersState {
 const Search: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [dogs, setDogs] = useState<Dog[]>([]);
-  const [favoritedDogs, setFavoritedDogs] = useState<string[]>([]);
-  const { isAuthenticated } = useAuth();
+  const [from, setFrom] = useState<string | undefined>(undefined);
 
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const theme = useTheme();
+
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
 
   const [filters, setFilters] = useState<FiltersState>({
@@ -50,24 +52,58 @@ const Search: React.FC = () => {
   const handleSearchDogs = async () => {
     try {
       setLoading(true);
-  
-      const responseDogs = await searchDogs(filters);
+      const response = await searchDogs(filters);
   
       await new Promise((resolve) => setTimeout(resolve, 1000)); 
   
-      setDogs(responseDogs);
+      setDogs(response.dogs);
+      setFrom(response.fromCursor)
       setLoading(false);
-      console.log("Dogs found:", responseDogs);
+      console.log("Dogs found:", response.dogs, "from cursor", response.fromCursor);
     } catch (error) {
       console.error("Error fetching dogs:", error);
       setLoading(false);
     }
   };
+  const handleFetchMoreDogs = async () => {
+    if (!from || loading) return; // Stop if no more results or already loading
   
+    try {
+      setLoading(true);
+      const response = await searchDogs(filters, from);
+      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
   
+      setDogs((prevDogs) => [...prevDogs, ...response.dogs]); // Append new dogs
+      setFrom(response.fromCursor); // Update next query for pagination
   
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching more dogs:", error);
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
+    if (!from) return;
+    console.log("next query", from)
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          handleFetchMoreDogs();
+        }
+      },
+      { threshold: 1.0 }
+    );
 
+    if (loadMoreRef.current) {
+      observer.observe(loadMoreRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [from, loading]);
+
+  
   return (
     <Box sx={{ minHeight: "100vh", backgroundColor: "secondary.main" }}>
       {loading && <LoadingScreen/>}
@@ -91,6 +127,7 @@ const Search: React.FC = () => {
 
           <Grid size={{ xs: 12, md: 9 }} sx = {{flexGrow: 1}}id="dog-list">
             <DogList dogs={dogs} />
+            <div ref={loadMoreRef} style={{ height: 20, marginBottom: 40 }} />
           </Grid>
 
         </Grid>

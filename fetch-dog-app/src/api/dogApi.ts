@@ -18,12 +18,13 @@ export const fetchBreeds = async (): Promise<string[]> => {
 };
 
 
-export const searchDogs = async (filters: FiltersState): Promise<Dog[]> => {
+export const searchDogs = async (filters: FiltersState, from?: string, sort?: string): Promise<{ dogs: Dog[]; fromCursor?: string }> => {
   try {
     const searchRequest = {
       breeds: filters.selectedBreeds,
       ageMin: filters.age.min,
       ageMax: filters.age.max,
+      from: from
     };
 
     const response = await axios.get(`${API_URL}/dogs/search`, {
@@ -31,21 +32,24 @@ export const searchDogs = async (filters: FiltersState): Promise<Dog[]> => {
       withCredentials: true,
     });
     console.log(response);
-    if (!response.data || !Array.isArray(response.data)) {
+    if (!response.data || !response.data.dogs || !Array.isArray(response.data.dogs)) {
       throw new Error("Invalid response format from API.");
     }
 
-    return response.data.map((dog: any) => ({
-      id: dog.id || "unknown",
-      name: dog.name || "Lucky",
-      breed: dog.breed || "Mutt",
-      age: typeof dog.age === "number" ? dog.age : 0,
-      zip_code: dog.zip_code || "Unknown",
-      img: dog.img,
-    }));
+    return {
+      dogs: response.data.dogs.map((dog: any) => ({
+        id: dog.id || "unknown",
+        name: dog.name || "Lucky",
+        breed: dog.breed || "Mutt",
+        age: typeof dog.age === "number" ? dog.age : 0,
+        zip_code: dog.zip_code || "Unknown",
+        img: dog.img,
+      })),
+      fromCursor: response.data.fromCursor || undefined, // Handle next query properly
+    };
   } catch (error) {
     console.error("Error fetching dogs:", (error as AxiosError).message);
-    return [];
+    return { dogs: [], fromCursor: undefined };
   }
 };
 

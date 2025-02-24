@@ -72,7 +72,7 @@ const searchDogsHandler: RequestHandler = async (req: Request, res: Response): P
       "Content-Type": "application/json",
     };
 
-    const { data: { resultIds: dogIds } = {} } = await axios.get(`${FETCH_API_URL}/dogs/search`, {
+    const { data: { resultIds: dogIds, next: next } = {} } = await axios.get(`${FETCH_API_URL}/dogs/search`, {
       params: req.query,
       headers,
       withCredentials: true,
@@ -83,12 +83,20 @@ const searchDogsHandler: RequestHandler = async (req: Request, res: Response): P
        return;
     }
 
-    console.log(`Found ${dogIds.length} dogs.`);
 
     const dogData = await fetchDogDetails(dogIds, headers);
-
-    res.json(dogData);
-    console.log(`Returned ${dogData.length} dogs.`);
+    let fromCursor = null;
+    if (next) {
+      const urlParams = new URLSearchParams(next.split("?")[1]);
+      fromCursor = urlParams.get("from") || null;
+    }
+    console.log("from cursor", fromCursor)
+    res.json({
+      dogs: dogData,
+      fromCursor: fromCursor,
+    });
+    // console.log(`Returned ${dogData.length} dogs.`);
+    console.log("next query", next);
   } catch (error) {
     console.error("Error fetching dogs:", error);
 

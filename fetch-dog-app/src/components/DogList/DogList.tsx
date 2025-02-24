@@ -18,9 +18,9 @@ const DogList: React.FC<DogListProps> = ({ dogs }) => {
           const isAlreadyFavorited = prev.some((favDog) => favDog.id === dog.id);
       
           if (isAlreadyFavorited) {
-            return prev.filter((favDog) => favDog.id !== dog.id); // Remove if already favorited
+            return prev.filter((favDog) => favDog.id !== dog.id); 
           } else {
-            return [...prev, dog]; // Append new favorite without clearing previous ones
+            return [...prev, dog]; 
           }
         });
       };
@@ -55,9 +55,6 @@ const DogList: React.FC<DogListProps> = ({ dogs }) => {
                     </Grid>
                 ))}
                 <Grid size ={{xs:12}} display="flex" justifyContent="center">
-          <Button variant="outlined">
-            Load More
-          </Button>
         </Grid>
             </Grid>
         </>
