@@ -16,16 +16,7 @@
         "src": "/api/(.*)",
         "dest": "fetch-dog-backend/src/server.ts"
       },
-      {
-        "src": "/(.*)",
-        "dest": "fetch-dog-app/build/$1"
-      }
-    ],
-    "rewrites": [
-      {
-        "source": "/((?!api/.*).*)",
-        "destination": "/index.html"
-      }
+      { "src": "/[^.]+", "dest": "/", "status": 200 }
     ]
   }
   
