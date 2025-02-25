@@ -8,8 +8,8 @@
     ],
     "routes": [
       {
-        "src": "/(.*)",
-        "dest": "fetch-dog-backend/dist/server.js"
+        "src": "/api/(.*)",
+        "dest": "/dist/server.js"
       }
     ]
   }
