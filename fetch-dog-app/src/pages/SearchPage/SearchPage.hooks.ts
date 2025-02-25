@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { searchDogs, matchDog } from "../../api/dogApi.ts";
 import { useAuth } from "../../context/AuthContext.tsx";
@@ -31,29 +31,23 @@ export const SearchHooks = () => {
       setLoading(false);
     }
   }, [isAuthenticated, navigate]);
-  //Get dogs on load
-  useEffect(() => {
-    handleSearchDogs();
-  }, []);
+
   //TODO: REMOVE 
 //   useEffect(() => {
 //     console.table(favoritedDogs);
 //   }, [from, favoritedDogs]);
 
-  const handleSearchDogs = async () => {
-    try {
-      setLoading(true);
-      const response = await searchDogs(filters);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setDogs(response.dogs);
-      setFrom(response.fromCursor);
-      setLoading(false);
-    } catch (error) {
-      console.error("Error fetching dogs:", error);
-      setLoading(false);
-    }
-  };
+const handleSearchDogs = useCallback(async () => {
+    setLoading(true);
+    const response = await searchDogs(filters);
+    setDogs(response.dogs);
+    setFrom(response.fromCursor);
+    setLoading(false);
+}, [filters]);
 
+useEffect(() => {
+    handleSearchDogs();
+}, [handleSearchDogs]); 
   const handleFetchMoreDogs = async () => {
     if (!from || from === "0" || loading) return;
     try {

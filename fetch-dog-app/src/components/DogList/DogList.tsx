@@ -4,11 +4,6 @@ import DogCard from "./DogCard.tsx";
 import { Dog } from "../../types";
 import { Button } from "@mui/material";
 
-
-interface DogListProps {
-    dogs: Dog[];
-}
-
 const DogList: React.FC<{ dogs: Dog[]; onFavoriteToggle: (dog: Dog) => void; favoritedDogs: Dog[] }> = ({
     dogs,
     onFavoriteToggle,

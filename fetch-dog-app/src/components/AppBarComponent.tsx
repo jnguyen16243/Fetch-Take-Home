@@ -13,7 +13,6 @@ interface AppBarProps {
    
 }
 const AppBarComponent: React.FC<AppBarProps> = ({ onFindMatch, onShowFavorites, showFavorites }) => {
-    const theme = useTheme();
     const { logout: setAuth } = useAuth();
     const navigate = useNavigate();
     const handleLogout = async () => {

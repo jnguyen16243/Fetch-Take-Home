@@ -1,5 +1,5 @@
 import React from "react";
-import { Paper, Typography, Stack, TextField, FormControl, InputLabel, Select, MenuItem, Button, Autocomplete } from "@mui/material";
+import { Paper, Typography, Stack, TextField, FormControl, InputLabel, Select, MenuItem, Autocomplete } from "@mui/material";
 import { ageRanges, usStates } from "../../constants.ts";
 import { useBreeds } from "../Breeds/BreedsFilter.hooks.ts";
 import { SearchFiltersProps } from "../../types.ts";
