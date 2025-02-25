@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
-  console.log("Cookies received:", req.headers.cookie);
+  
   if (!req.headers.cookie) {
     res.status(401).json({ error: "No authentication cookie found in request headers" });
     return;
@@ -20,7 +20,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction):
     return;
   }
 
-  req.authToken = accessToken; // ✅ Store token in request object for later use
+  req.authToken = accessToken; 
   next();
 };
 

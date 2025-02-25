@@ -12,7 +12,6 @@ export const useBreeds = () => {
         const breedList = await fetchBreeds();
         setBreeds(breedList);
       } catch (error) {
-        console.error("Error fetching breeds", error);
         setError("Failed to load breeds");
       } finally {
         setLoadingBreeds(false);

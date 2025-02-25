@@ -42,7 +42,7 @@ const MatchPage: React.FC = () => {
                 justifyContent: "center",
                 alignItems: "center",
                 minHeight: "100vh",
-                background: "linear-gradient(135deg, #1a0a22, #3e0f28)", // Adds a rich gradient background
+                background: "linear-gradient(135deg, #1a0a22, #3e0f28)", 
                 textAlign: "center",
                 padding: 3,
             }}

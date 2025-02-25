@@ -6,7 +6,6 @@ import validateLocationSearchBody from "../middleware/validateLocationSearchBody
 const router = Router();
 const FETCH_API_URL = "https://frontend-take-home-service.fetch.com";
 
-
 const locationsHandler: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {
     const {body} = req;
@@ -47,9 +46,9 @@ const searchLocationHandler: RequestHandler = async (req: Request, res: Response
       },
       withCredentials: true,
     });
-    console.log(response.data)
+    
     const zipCodes = response.data.results?.map((location: { zip_code: string }) => location.zip_code) || [];
-    console.log("zip codes", zipCodes)
+    
     res.json({ zipCodes: zipCodes });
   } catch (error: unknown) {
     const axiosError = error as AxiosError;
@@ -59,7 +58,6 @@ const searchLocationHandler: RequestHandler = async (req: Request, res: Response
     });
   }
 };
-
 
 router.post("/", authMiddleware, locationsHandler);
 router.post("/search",authMiddleware,validateLocationSearchBody, searchLocationHandler);

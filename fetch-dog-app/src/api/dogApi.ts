@@ -36,7 +36,7 @@ export const searchDogs = async (
 
     if ((filters.city && filters.city !== lastCity) || (filters.state && filters.state !== lastState)) {
       const locationSearchRequest = { states: [filters.state], city: filters.city, size: 100 };
-      console.log("Calling locations API with:", locationSearchRequest);
+      
 
       const zipCodeResponse = await apiClient.post("/locations/search", locationSearchRequest);
 
@@ -50,7 +50,7 @@ export const searchDogs = async (
         cachedZipCodes = [];
       }
     } else {
-      console.log("Using cached zip codes:", cachedZipCodes);
+      
       zipCodes = cachedZipCodes;
     }
 
@@ -62,7 +62,7 @@ export const searchDogs = async (
       zipCodes: zipCodes.length > 0 ? zipCodes : undefined,
       sort: sort || undefined,
     };
-    console.log("calling dogs search", searchRequest);
+    
 
     const response = await apiClient.get("/dogs/search", { params: searchRequest });
 
@@ -90,7 +90,7 @@ export const searchDogs = async (
 export const matchDog = async (dogIds: string[]): Promise<string> => {
   try {
     const response = await apiClient.post("/dogs/match", dogIds);
-    console.log("Matched Dog ID:", response.data.matchedDogId);
+    
     return response.data.matchedDogId;
   } catch (error) {
     console.error("Error fetching matched dog:", error);

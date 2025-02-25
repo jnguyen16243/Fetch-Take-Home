@@ -25,7 +25,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         }
       })
       .catch((error) => {
-        console.log("auth check failed")
         setIsAuthenticated(false);
       });
   }, []);

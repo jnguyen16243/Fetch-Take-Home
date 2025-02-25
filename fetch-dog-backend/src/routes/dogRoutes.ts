@@ -70,7 +70,7 @@ const searchDogsHandler: RequestHandler = async (req: Request, res: Response): P
       Authorization: `Bearer ${req.authToken}`,
       "Content-Type": "application/json",
     };
-    console.log(req.query)
+    
     const { data: { resultIds: dogIds, next: next } = {} } = await axios.get(`${FETCH_API_URL}/dogs/search`, {
       params: req.query,
       headers,
@@ -78,7 +78,7 @@ const searchDogsHandler: RequestHandler = async (req: Request, res: Response): P
     });
     
     if (!dogIds || dogIds.length === 0) {
-      console.log("no dogs found")
+      
        res.status(404).json({ message: "No dogs found :(" });
        return;
     }
@@ -90,12 +90,12 @@ const searchDogsHandler: RequestHandler = async (req: Request, res: Response): P
       const urlParams = new URLSearchParams(next.split("?")[1]);
       fromCursor = urlParams.get("from") || null;
     }
-    console.log("from cursor", fromCursor)
+    
     res.json({
       dogs: dogData,
       fromCursor: fromCursor,
     });
-    // console.log(`Returned ${dogData.length} dogs.`);
+    // 
   } catch (error) {
     console.error("Error fetching dogs:", error);
 

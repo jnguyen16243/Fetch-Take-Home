@@ -110,7 +110,7 @@ export const SearchHooks = () => {
     try {
       const matchedDogId = await matchDog(favoritedDogs.map((dog) => dog.id));
       const matchedDog = favoritedDogs.find((fav) => fav.id === matchedDogId);
-      console.log(matchedDog);
+      
       navigate("/match", { state: { matchedDog } });
     } catch (error) {
       console.error("Error finding match:", error);
