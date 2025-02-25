@@ -7,8 +7,6 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import Confetti from "react-confetti";
 
 const MatchPage: React.FC = () => {
-    const [loading, setLoading] = useState(true);
-    const [showConfetti, setShowConfetti] = useState(true);
     const location = useLocation();
     const matchedDog: Dog | null = location.state?.matchedDog || null;
     const { isAuthenticated } = useAuth();
@@ -19,16 +17,11 @@ const MatchPage: React.FC = () => {
         if (isAuthenticated === false) {
             navigate("/");
         } else {
-            setLoading(false);
+            
         }
     }, [isAuthenticated, navigate]);
 
-    useEffect(() => {
-        if (matchedDog) {
-            const timer = setTimeout(() => setShowConfetti(false), 30000);
-            return () => clearTimeout(timer);
-        }
-    }, [matchedDog]);
+
 
     if (!matchedDog) {
         return <Typography variant="h6">No match found...</Typography>;

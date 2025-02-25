@@ -1,5 +1,5 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, Button, useTheme } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import PetsIcon from '@mui/icons-material/Pets';
 import { useAuth } from "../context/AuthContext.tsx";
