@@ -17,7 +17,13 @@
         "dest": "fetch-dog-backend/src/server.ts"
       },
       { "src": "/[^.]+", "dest": "/", "status": 200 }
-    ]
+    ],
+    "rewrites": [
+    {
+      "source": "/((?!api/.*).*)",
+      "destination": "/index.html"
+    }
+  ]
   }
   
   
