@@ -2,7 +2,7 @@
     "version": 2,
     "builds": [
       {
-        "src": "fetch-dog-backend/src/server.ts",
+        "src": "package.json",
         "use": "@vercel/node"
       }
     ],
