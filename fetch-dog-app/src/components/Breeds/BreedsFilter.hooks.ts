@@ -3,7 +3,7 @@ import { fetchBreeds } from "../../api/dogApi.ts";
 
 export const useBreeds = () => {
   const [breeds, setBreeds] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingBreeds, setLoadingBreeds] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -15,12 +15,12 @@ export const useBreeds = () => {
         console.error("Error fetching breeds", error);
         setError("Failed to load breeds");
       } finally {
-        setLoading(false);
+        setLoadingBreeds(false);
       }
     };
 
     getBreeds();
   }, []);
 
-  return { breeds, loading, error };
+  return { breeds, loading: loadingBreeds, error };
 };

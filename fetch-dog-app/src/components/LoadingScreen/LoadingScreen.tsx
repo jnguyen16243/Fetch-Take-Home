@@ -1,11 +1,9 @@
 import React from "react";
 import Lottie from "react-lottie-player";
-import { Box, useTheme } from "@mui/material";
+import { Box } from "@mui/material";
 import dogLoadingAnimation from "../../assets/dogLoadingAnimation.json"
 
 const LoadingScreen: React.FC = () => {
-    const theme = useTheme();
-  
     return (
       <Box
         sx={{
@@ -14,7 +12,6 @@ const LoadingScreen: React.FC = () => {
           left: 0,
           width: "100vw",
           height: "100vh",
-          //backgroundColor: theme.palette.background.default + "CC", // Use theme default background with transparency
           display: "flex",
           justifyContent: "center",
           alignItems: "center",

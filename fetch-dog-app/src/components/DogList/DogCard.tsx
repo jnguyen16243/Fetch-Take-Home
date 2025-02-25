@@ -1,7 +1,7 @@
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { Box, Card, CardContent, CardMedia, IconButton, Typography, useTheme } from "@mui/material";
 import React from "react";
-import { Dog } from "../types";
+import { Dog } from "../../types";
 
 interface DogCardProps {
   dog: Dog;

@@ -164,16 +164,6 @@ const matchDogHandler: RequestHandler = async (req: Request, res: Response): Pro
     });
 
     const matchedDogId = matchResponse.data.match;
-    //Use matched dog id to get match dog information 
-    // const dogResponse = await axios.post(`${FETCH_API_URL}/dogs`, [matchedDogId], {
-    //   headers: {
-    //     Cookie: req.headers.cookie,
-    //     Authorization: `Bearer ${req.authToken}`,
-    //     "Content-Type": "application/json",
-    //   },
-    //   withCredentials: true,
-    // });
-
     res.json({matchedDogId: matchedDogId}); 
   } catch (error: unknown) {
     const axiosError = error as AxiosError;

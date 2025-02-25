@@ -1,3 +1,5 @@
+import { AgeRange } from "./types";
+
 export const usStates = [
     { name: "Alabama", code: "AL" },
     { name: "Alaska", code: "AK" },
@@ -49,16 +51,12 @@ export const usStates = [
     { name: "West Virginia", code: "WV" },
     { name: "Wisconsin", code: "WI" },
     { name: "Wyoming", code: "WY" },
-  ];
+];
 
-  export interface AgeRange {
-    label: string;
-    min: number;
-    max: number;
-  }
-  export const ageRanges: AgeRange[] = [
+
+export const ageRanges: AgeRange[] = [
     { label: "Puppy", min: 0, max: 2 },
     { label: "Young", min: 2, max: 5 },
     { label: "Adult", min: 5, max: 10 },
     { label: "Senior", min: 10, max: 25 },
-  ];
+];

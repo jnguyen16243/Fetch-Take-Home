@@ -3,19 +3,19 @@ import { createTheme } from "@mui/material/styles";
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#300d38", // Fetch Purple
+      main: "#300d38", 
       light: "#5a1a69",
       dark: "#f6b156",
       contrastText: "#ffffff",
     },
     secondary: {
-      main: "#f8b95a", // Warm sunset orange
+      main: "#f8b95a",
       light: "#FFFFFF",
       dark: "#f6b156",
       contrastText: "#000000",
     },
     background: {
-      default: "#FFFFFF", // Light yellow background
+      default: "#FFFFFF", 
       paper: "#FFFFFF",
     },
     text: {
@@ -26,11 +26,11 @@ const theme = createTheme({
   typography: {
     fontFamily: "'Bitter', serif",
     h1: {
-      fontWeight: 900, // Extra bold for big titles
-      fontSize: "3rem", // Adjust size as needed
+      fontWeight: 900,
+      fontSize: "3rem", 
     },
     h2: {
-      fontWeight: 800, // Slightly less bold
+      fontWeight: 800, 
       fontSize: "2.5rem",
     },
     h3: {
@@ -38,11 +38,11 @@ const theme = createTheme({
       fontSize: "2rem",
     },
     body1: {
-      fontWeight: 400, // Normal text weight
+      fontWeight: 400, 
     },
     button: {
-      textTransform: "none", // Keep button text normal case
-      fontWeight: 700, // Make buttons bold
+      textTransform: "none", 
+      fontWeight: 700, 
     },
   },
 });

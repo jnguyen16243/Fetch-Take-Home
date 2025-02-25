@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import Grid from '@mui/material/Grid2';
-import DogCard from "../DogCard.tsx";
+import DogCard from "./DogCard.tsx";
 import { Dog } from "../../types";
 import { Button } from "@mui/material";
 

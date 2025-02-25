@@ -1,22 +1,8 @@
 import React from "react";
 import { Paper, Typography, Stack, TextField, FormControl, InputLabel, Select, MenuItem, Button, Autocomplete } from "@mui/material";
-import { AgeRange, ageRanges, usStates } from "../../constants.ts";
+import { ageRanges, usStates } from "../../constants.ts";
 import { useBreeds } from "../Breeds/BreedsFilter.hooks.ts";
-
-interface SearchFiltersProps {
-    filters: {
-        selectedBreeds: string[];
-        city: string;
-        state: string;
-        age: AgeRange;
-    };
-    setFilters: React.Dispatch<React.SetStateAction<{
-        selectedBreeds: string[];
-        age: AgeRange;
-        city: string;
-        state: string;
-    }>>;
-}
+import { SearchFiltersProps } from "../../types.ts";
 
 const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, setFilters }) => {
     const { breeds, loading } = useBreeds();
@@ -30,7 +16,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({ filters, setFilters }) =>
 
         setFilters((prev) => ({
             ...prev,
-            age: selectedAgeRange, // Fix: update `age`, not `ageRange`
+            age: selectedAgeRange, 
         }));
     };
 

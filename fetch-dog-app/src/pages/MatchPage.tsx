@@ -31,7 +31,7 @@ const MatchPage: React.FC = () => {
     }, [matchedDog]);
 
     if (!matchedDog) {
-        return <Typography variant="h6">No match found. Try again!</Typography>;
+        return <Typography variant="h6">No match found...</Typography>;
     }
 
     return (

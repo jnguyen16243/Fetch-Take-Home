@@ -4,7 +4,7 @@ import { ThemeProvider, CssBaseline } from "@mui/material";
 import theme from "./theme.ts"; 
 import { AuthProvider } from "./context/AuthContext.tsx";
 import Login from "./pages/Login.tsx";
-import Search from "./pages/Search.tsx";
+import Search from "./pages/SearchPage/SearchPage.tsx";
 import MatchPage from "./pages/MatchPage.tsx";
 
 const App: React.FC = () => {
