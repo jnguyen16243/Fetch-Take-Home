@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Button, Card, CardContent, CardMedia, Typography } from "@mui/material";
 import { Dog } from "../types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useAuth } from "../context/AuthContext.tsx";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import Confetti from "react-confetti";
