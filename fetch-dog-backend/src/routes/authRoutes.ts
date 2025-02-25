@@ -3,7 +3,7 @@ import axios from "axios";
 import authMiddleware from "../middleware/authMiddleware";
 
 const router = Router();
-const FETCH_API_URL = "https://frontend-take-home-service.fetch.com";
+const FETCH_API_URL = process.env.FETCH_API_URL  || "https://frontend-take-home-service.fetch.com";
 
 router.post("/login", async (req: Request, res: Response): Promise<void> => {
   try {

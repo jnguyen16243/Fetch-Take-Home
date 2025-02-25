@@ -4,7 +4,7 @@ import authMiddleware from "../middleware/authMiddleware";
 import validateSearchDogs from "../middleware/validateSearchDogs";
 
 const router = Router();
-const FETCH_API_URL = "https://frontend-take-home-service.fetch.com";
+const FETCH_API_URL = process.env.FETCH_API_URL  || "https://frontend-take-home-service.fetch.com";
 const MAX_DOG_IDS = 100;
 export interface Dog {
   id: string;

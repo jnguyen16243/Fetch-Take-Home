@@ -1,0 +1,5 @@
+{
+    "scripts": {
+      "build": "cd fetch-dog-app && npm install && npm run build && cd ../fetch-dog-back-end && npm install"
+    }
+  }

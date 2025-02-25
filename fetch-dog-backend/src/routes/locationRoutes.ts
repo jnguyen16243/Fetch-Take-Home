@@ -4,7 +4,7 @@ import authMiddleware from "../middleware/authMiddleware";
 import validateLocationSearchBody from "../middleware/validateLocationSearchBody";
 
 const router = Router();
-const FETCH_API_URL = "https://frontend-take-home-service.fetch.com";
+const FETCH_API_URL = process.env.FETCH_API_URL  || "https://frontend-take-home-service.fetch.com";
 
 const locationsHandler: RequestHandler = async (req: Request, res: Response): Promise<void> => {
   try {

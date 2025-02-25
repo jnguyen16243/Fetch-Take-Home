@@ -36,9 +36,9 @@ export const SearchHooks = () => {
     handleSearchDogs();
   }, []);
   //TODO: REMOVE 
-  useEffect(() => {
-    console.table(favoritedDogs);
-  }, [from, favoritedDogs]);
+//   useEffect(() => {
+//     console.table(favoritedDogs);
+//   }, [from, favoritedDogs]);
 
   const handleSearchDogs = async () => {
     try {

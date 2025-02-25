@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { Dog, FiltersState, User } from "../types.ts";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = process.env.REACT_APP_API_URL;
 
 const apiClient = axios.create({
   baseURL: API_URL,
