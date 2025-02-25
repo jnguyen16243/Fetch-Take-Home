@@ -1,14 +1,13 @@
 {
   "name": "fetch-dog-backend",
   "version": "1.0.0",
-  "main": "dist/server.js",
+  "main": "src/server.ts",
   "scripts": {
     "dev": "npx ts-node src/server.ts",
     "test": "jest",
     "test:watch": "jest --watch", 
     "test:coverage": "jest --coverage",
-    "build": "tsc",
-    "start": "node dist/server.js"
+    "vercel-build": "echo Done running vercel-build."
 
   },
   "keywords": [],
