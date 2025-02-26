@@ -59,6 +59,8 @@ Infinite Scroll Re-Fetching
  State Filter Cannot Be Cleared
 
     The State dropdown does not allow selecting "No State."
+You can login on mobile, but no dogs load. 
+
 
  TODO
 Optimizations
