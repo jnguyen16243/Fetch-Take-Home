@@ -7,7 +7,8 @@
     "test": "jest",
     "test:watch": "jest --watch", 
     "test:coverage": "jest --coverage",
-    "vercel-build": "echo Done running vercel-build."
+    "build": "tsc",
+    "start": "node dist/server.js"
 
   },
   "keywords": [],
