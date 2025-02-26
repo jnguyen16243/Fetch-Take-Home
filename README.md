@@ -2,7 +2,7 @@ Fetch-Take-Home
 
 This is a React + Node.js application that allows users to browse available dogs for adoption and match with one based on their favorites.
 
-🔗 Live Demo: fetch-take-home-client.vercel.app
+🔗 Live Demo: fetch-take-home-client.vercel.app (Back-end is hosted on free Render so requests may be delayed if the server is inactive)
 
 Getting Started
 Backend Setup
