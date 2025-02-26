@@ -16,12 +16,6 @@ const allowedOrigins = [
   "http://localhost:3000", 
   process.env.CLIENT_URL || "https://fetch-take-home-client.vercel.app", "https://fetch-take-home-client.vercel.app"
 ];
-app.use((req, res, next) => {
-  console.log("Incoming request:");
-  console.log("Method:", req.method);
-  console.log("Origin:", req.headers.origin);  
-  console.log("Cookies:", req.headers.cookie); 
-});
 
 app.use(cors({
   origin: allowedOrigins,
@@ -30,7 +24,7 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 }));
 
-console.log("🛠️ CORS Configured Origins:", allowedOrigins);
+
 
 app.use("/api/auth", authRoutes);
 app.use("/api/dogs", dogRoutes);

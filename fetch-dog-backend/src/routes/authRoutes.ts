@@ -39,9 +39,9 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
       sameSite: "none",
       path: "/",
     });
-    console.log("✅ Setting cookie:", cookieString,"tokenValue", tokenValue);
+    // console.log("✅ Setting cookie:", cookieString,"tokenValue", tokenValue);
 
-    res.setHeader("Set-Cookie", cookieString);
+    // res.setHeader("Set-Cookie", cookieString);
     res.json({ success: true });
 
   } catch (error: any) {
