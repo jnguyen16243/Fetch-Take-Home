@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(cookieParser());
 const allowedOrigins = [
   "http://localhost:3000", 
-  process.env.CLIENT_URL || "https://fetch-take-home-client.vercel.app/"
+  process.env.CLIENT_URL || "https://fetch-take-home-client.vercel.app"
 ];
 
 app.use(cors({
