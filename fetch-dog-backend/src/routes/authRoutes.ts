@@ -32,6 +32,13 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
       res.status(401).json({ error: "Authentication token not found in response" });
       return;
     }
+    const tokenValue = cookieString.split(";")[0].split("=")[1];
+    res.cookie("fetch-access-token", tokenValue, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "none",
+      path: "/",
+    });
 
     res.setHeader("Set-Cookie", cookieString);
     res.json({ success: true });
