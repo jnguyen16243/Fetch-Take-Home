@@ -6,7 +6,7 @@ import { useAuth } from "../context/AuthContext.tsx";
 import { User } from "../types";
 
 const Login: React.FC = () => {
-  const [user, setUser] = useState<User>({ name: "", email: "" });
+  const [user, setUser] = useState<User>({ name: "John Doe", email: "JohnDoe@gmail.com" });
   const navigate = useNavigate();
   const { login: setAuth } = useAuth();
   const theme = useTheme(); 
